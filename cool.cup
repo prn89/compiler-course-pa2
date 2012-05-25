@@ -68,6 +68,10 @@ nonterminal programc program;
 nonterminal Classes class_list;
 nonterminal class_c class;
 nonterminal Features dummy_feature_list;
+nonterminal Feature feature;
+nonterminal formalc formal;
+nonterminal Expression expr;
+
 
 /* Precedence declarations go here. */
 precedence right DARROW;
