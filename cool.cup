@@ -70,6 +70,15 @@ nonterminal class_c class;
 nonterminal Features dummy_feature_list;
 
 /* Precedence declarations go here. */
+precedence right DARROW;
+precedence left NOT;
+precedence nonassoc LE, LT, EQ;
+precedence left PLUS, MINUS;
+precedence left MULT, DIV;
+precedence left ISVOID;
+precedence left NEG;
+precedence left AT;
+precedence left DOT;
 
 program	
 	::= class_list:cl
