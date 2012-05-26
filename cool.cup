@@ -159,6 +159,15 @@ case ::= OBJECTID COLON TYPEID DARROW expr SEMI
 case_list ::= case
             | case_list case
             ;
+/*
+let_id ::= ID COLON TYPE
+       | ID COLON  TYPE ASSIGN expr
+       ;
+
+let_id_list ::= let_id
+            | let_id COMMA let_id_list
+            ;
+*/
 
 expr ::= OBJECTID ASSIGN expr
      /* dispatch */
@@ -170,7 +179,15 @@ expr ::= OBJECTID ASSIGN expr
      | WHILE expr LOOP expr POOL
      | LBRACE block_list RBRACE
      /* complicated */
-     /* | LET OBJID COLON TYPEID [ ASSIGN expr ] [[COMMA OBJECTID COLON TYPEID [ ASSIGN expr ] ]]* IN expr */
+
+   /*| LET let_id_list OBJECTID COLON TYPEID [ ASSIGN expr ] IN expr*/
+   /*| LET let_id_list:outer IN expr:body */
+/*
+     | LET OBJECTID:name COLON TYPEID:type ASSIGN expr:init IN expr:body
+         {: RESULT = new let(curr_lineno(), name, type, init, body); :}
+     | LET OBJECTID:name COLON TYPEID:type IN expr:body
+         {: RESULT = new let(curr_lineno(), name, type, new no_expr(curr_lineno()), body); :}
+*/
      | CASE expr OF case_list ESAC
      | NEW TYPEID
      | ISVOID expr
