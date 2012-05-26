@@ -71,7 +71,11 @@ nonterminal Features dummy_feature_list;
 nonterminal Feature feature;
 nonterminal formalc formal;
 nonterminal Expression expr;
+nonterminal Expressions expr_list;
+nonterminal Expressions block_list;
 nonterminal Formals formal_list;
+nonterminal Case case;
+nonterminal Cases case_list;
 
 
 /* Precedence declarations go here. */
@@ -136,3 +140,36 @@ formal_list ::= /* empty */
             | formal:f COMMA formal_list:fl
                 {: RESULT = fl.appendElement(f); :}
             ;
+
+expr_list ::= /* empty */
+              {: RESULT = new Expressions(curr_lineno()); :}
+          | expr:e COMMA expr_list:el
+              {: RESULT = el.appendElement(e); :}
+          ;
+
+block_list ::= expr:e SEMI
+               {: RESULT = (new Expressions(curr_lineno())).appendElement(e); :}
+           | block_list:bl expr:e
+               {: RESULT = bl.appendElement(e); :}
+           ;
+
+case ::= OBJECTID COLON TYPEID DARROW expr SEMI
+     ;
+
+case_list ::= case
+            | case_list case
+            ;
+
+expr ::= OBJECTID ASSIGN expr
+     /* dispatch */
+     | expr DOT OBJECTID LPAREN expr_list RPAREN
+     | expr AT TYPEID DOT OBJECTID LPAREN expr_list RPAREN
+     /* function call? */
+     | OBJECTID LPAREN expr_list RPAREN
+     | IF expr THEN expr ELSE expr FI
+     | WHILE expr LOOP expr POOL
+     | LBRACE block_list RBRACE
+     /* complicated */
+     /* | LET OBJID COLON TYPEID [ ASSIGN expr ] [[COMMA OBJECTID COLON TYPEID [ ASSIGN expr ] ]]* IN expr */
+     | CASE expr OF case_list ESAC
+     ;
