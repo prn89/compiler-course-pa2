@@ -75,7 +75,7 @@ nonterminal Formals formal_list;
 
 
 /* Precedence declarations go here. */
-precedence right DARROW;
+precedence right ASSIGN;
 precedence left NOT;
 precedence nonassoc LE, LT, EQ;
 precedence left PLUS, MINUS;
@@ -123,7 +123,7 @@ feature ::= OBJECTID:name LPAREN formal_list:fl RPAREN COLON TYPEID:type LBRACE 
             /* default init everything to void */
             /* TODO: make sure Bool defaults to false */
             {: RESULT = new attr(curr_lineno(), name, type, new no_expr(curr_lineno())); :}
-        | OBJECTID:name COLON TYPEID:type DARROW expr:value
+        | OBJECTID:name COLON TYPEID:type ASSIGN expr:value
             {: RESULT = new attr(curr_lineno(), name, type, value); :}
         ;
 
