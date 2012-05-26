@@ -194,21 +194,38 @@ expr ::= OBJECTID ASSIGN expr
      | LET OBJECTID:name COLON TYPEID:type IN expr:body
          {: RESULT = new let(curr_lineno(), name, type, new no_expr(curr_lineno()), body); :}
 */
-     | CASE expr OF case_list ESAC
-     | NEW TYPEID
-     | ISVOID expr
-     | expr PLUS expr
-     | expr MINUS expr
-     | expr MULT expr
-     | expr DIV expr
-     | NEG expr
-     | expr LT expr
-     | expr LE expr
-     | expr EQ expr
-     | NOT expr
-     | LPAREN expr RPAREN
-     | OBJECTID
-     | INT_CONST
-     | STR_CONST
-     | BOOL_CONST
+     | CASE expr:e OF case_list:cases ESAC
+          {: RESULT = new typcase(curr_lineno(), e, cases); :}
+     | NEW TYPEID:name
+          {: RESULT = new new_(curr_lineno(), name); :}
+     | ISVOID expr:e
+          {: RESULT = new isvoid(curr_lineno(), e); :}
+     | expr:e1 PLUS expr:e2
+          {: RESULT = new plus(curr_lineno(), e1, e2); :}
+     | expr:e1 MINUS expr:e2
+          {: RESULT = new sub(curr_lineno(), e1, e2); :}
+     | expr:e1 MULT expr:e2
+          {: RESULT = new mul(curr_lineno(), e1, e2); :}
+     | expr:e1 DIV expr:e2
+          {: RESULT = new divide(curr_lineno(), e1, e2); :}
+     | NEG expr:e
+          {: RESULT = new neg(curr_lineno(), e); :}
+     | expr:e1 LT expr:e2
+          {: RESULT = new lt(curr_lineno(), e1, e2); :}
+     | expr:e1 LE expr:e2
+          {: RESULT = new leq(curr_lineno(), e1, e2); :}
+     | expr:e1 EQ expr:e2
+          {: RESULT = new eq(curr_lineno(), e1, e2); :}
+     | NOT expr:e
+          {: RESULT = new comp(curr_lineno(), e); :}
+     | LPAREN expr:e RPAREN
+          {: RESULT = e; :}
+     | OBJECTID:name
+          {: RESULT = new object(curr_lineno(), name); :}
+     | INT_CONST:val
+          {: RESULT = new int_const(curr_lineno(), val); :}
+     | STR_CONST:val
+          {: RESULT = new string_const(curr_lineno(), val); :}
+     | BOOL_CONST:val
+          {: RESULT = new bool_const(curr_lineno(), val); :}
      ;
