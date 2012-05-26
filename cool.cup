@@ -117,6 +117,8 @@ class
 dummy_feature_list
 	::= /* empty */
 	    {: RESULT = new Features(curr_lineno()); :}
+        | feature:f
+	    {: RESULT = (new Features(curr_lineno())).appendElement(f); :}
         | feature:f SEMI dummy_feature_list:fl
 	    {: RESULT = fl.appendElement(f); :}
 	;
@@ -137,12 +139,16 @@ formal ::= OBJECTID:name COLON TYPEID:type
 
 formal_list ::= /* empty */
                 {: RESULT = new Formals(curr_lineno()); :}
+            | formal:f
+                {: RESULT = (new Formals(curr_lineno())).appendElement(f); :}
             | formal:f COMMA formal_list:fl
                 {: RESULT = fl.appendElement(f); :}
             ;
 
 expr_list ::= /* empty */
               {: RESULT = new Expressions(curr_lineno()); :}
+          | expr:e
+              {: RESULT = (new Expressions(curr_lineno())).appendElement(e); :}
           | expr:e COMMA expr_list:el
               {: RESULT = el.appendElement(e); :}
           ;
