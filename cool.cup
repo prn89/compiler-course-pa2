@@ -172,4 +172,20 @@ expr ::= OBJECTID ASSIGN expr
      /* complicated */
      /* | LET OBJID COLON TYPEID [ ASSIGN expr ] [[COMMA OBJECTID COLON TYPEID [ ASSIGN expr ] ]]* IN expr */
      | CASE expr OF case_list ESAC
+     | NEW TYPEID
+     | ISVOID expr
+     | expr PLUS expr
+     | expr MINUS expr
+     | expr MULT expr
+     | expr DIV expr
+     | NEG expr
+     | expr LT expr
+     | expr LE expr
+     | expr EQ expr
+     | NOT expr
+     | LPAREN expr RPAREN
+     | OBJECTID
+     | INT_CONST
+     | STR_CONST
+     | BOOL_CONST
      ;
