@@ -71,6 +71,7 @@ nonterminal Features dummy_feature_list;
 nonterminal Feature feature;
 nonterminal formalc formal;
 nonterminal Expression expr;
+nonterminal Formals formal_list;
 
 
 /* Precedence declarations go here. */
@@ -112,4 +113,26 @@ class
 dummy_feature_list
 	::= /* empty */
 	    {: RESULT = new Features(curr_lineno()); :}
+        | feature:f SEMI dummy_feature_list:fl
+	    {: RESULT = fl.appendElement(f); :}
 	;
+
+feature ::= OBJECTID:name LPAREN formal_list:fl RPAREN COLON TYPEID:type LBRACE expr:e RBRACE
+            {: RESULT = new method(curr_lineno(), name, fl, type, e); :}
+        | OBJECTID:name COLON TYPEID:type
+            /* default init everything to void */
+            /* TODO: make sure Bool defaults to false */
+            {: RESULT = new attr(curr_lineno(), name, type, new no_expr(curr_lineno())); :}
+        | OBJECTID:name COLON TYPEID:type DARROW expr:value
+            {: RESULT = new attr(curr_lineno(), name, type, value); :}
+        ;
+
+formal ::= OBJECTID:name COLON TYPEID:type
+           {: RESULT = new formalc(curr_lineno(), name, type); :}
+       ;
+
+formal_list ::= /* empty */
+                {: RESULT = new Formals(curr_lineno()); :}
+            | formal:f COMMA formal_list:fl
+                {: RESULT = fl.appendElement(f); :}
+            ;
