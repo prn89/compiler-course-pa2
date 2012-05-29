@@ -183,7 +183,8 @@ expr ::= OBJECTID ASSIGN expr
      | OBJECTID LPAREN expr_list RPAREN
      | IF expr THEN expr ELSE expr FI
      | WHILE expr LOOP expr POOL
-     | LBRACE block_list RBRACE
+     | LBRACE block_list:bl RBRACE
+         {: RESULT = new block(curr_lineno(), bl); :}
      /* complicated */
 
    /*| LET let_id_list OBJECTID COLON TYPEID [ ASSIGN expr ] IN expr*/
