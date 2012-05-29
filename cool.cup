@@ -149,7 +149,7 @@ expr_list ::= /* empty */
               {: RESULT = new Expressions(curr_lineno()); :}
           | expr:e
               {: RESULT = (new Expressions(curr_lineno())).appendElement(e); :}
-          | expr:e COMMA expr_list:el
+          | expr_list:el COMMA expr:e
               {: RESULT = el.appendElement(e); :}
           ;
 
