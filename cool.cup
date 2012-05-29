@@ -117,9 +117,9 @@ class
 dummy_feature_list
 	::= /* empty */
 	    {: RESULT = new Features(curr_lineno()); :}
-        | feature:f
+        | feature:f SEMI
 	    {: RESULT = (new Features(curr_lineno())).appendElement(f); :}
-        | feature:f SEMI dummy_feature_list:fl
+        | dummy_feature_list:fl feature:f SEMI
 	    {: RESULT = fl.appendElement(f); :}
 	;
 
