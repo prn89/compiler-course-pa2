@@ -141,7 +141,7 @@ formal_list ::= /* empty */
                 {: RESULT = new Formals(curr_lineno()); :}
             | formal:f
                 {: RESULT = (new Formals(curr_lineno())).appendElement(f); :}
-            | formal:f COMMA formal_list:fl
+            | formal_list:fl COMMA formal:f
                 {: RESULT = fl.appendElement(f); :}
             ;
 
