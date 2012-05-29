@@ -180,7 +180,8 @@ let_id_list ::= let_id
 
 expr ::= OBJECTID ASSIGN expr
      /* dispatch */
-     | expr DOT OBJECTID LPAREN expr_list RPAREN
+     | expr:e DOT OBJECTID:name LPAREN expr_list:actual RPAREN
+         {: RESULT = new dispatch(curr_lineno(), e, name, actual); :}
      | expr AT TYPEID DOT OBJECTID LPAREN expr_list RPAREN
      /* function call? */
      | OBJECTID LPAREN expr_list RPAREN
