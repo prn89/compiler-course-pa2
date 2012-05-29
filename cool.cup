@@ -159,11 +159,14 @@ block_list ::= expr:e SEMI
                {: RESULT = bl.appendElement(e); :}
            ;
 
-case ::= OBJECTID COLON TYPEID DARROW expr SEMI
+case ::= OBJECTID:name COLON TYPEID:type DARROW expr:e SEMI
+         {: RESULT = new branch(curr_lineno(), name, type, e); :}
      ;
 
-case_list ::= case
-            | case_list case
+case_list ::= case:c
+              {: RESULT = (new Cases(curr_lineno())).appendElement(c); :}
+            | case_list:cs case:c
+              {: RESULT = cs.appendElement(c); :}
             ;
 /*
 let_id ::= ID COLON TYPE
