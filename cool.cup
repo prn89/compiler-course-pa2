@@ -111,6 +111,7 @@ class
 				   f, curr_filename()); :}
 	| CLASS TYPEID:n INHERITS TYPEID:p LBRACE dummy_feature_list:f RBRACE SEMI
 	    {: RESULT = new class_c(curr_lineno(), n, p, f, curr_filename()); :}
+        | CLASS error SEMI
 	;
 
 /* Feature list may be empty, but no empty features in list. */
