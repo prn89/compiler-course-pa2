@@ -194,15 +194,10 @@ expr ::= OBJECTID:name ASSIGN expr:e
      | LBRACE block_list:bl RBRACE
          {: RESULT = new block(curr_lineno(), bl); :}
      /* complicated */
-
-   /*| LET let_id_list OBJECTID COLON TYPEID [ ASSIGN expr ] IN expr*/
-   /*| LET let_id_list:outer IN expr:body */
-/*
-     | LET OBJECTID:name COLON TYPEID:type ASSIGN expr:init IN expr:body
-         {: RESULT = new let(curr_lineno(), name, type, init, body); :}
-     | LET OBJECTID:name COLON TYPEID:type IN expr:body
-         {: RESULT = new let(curr_lineno(), name, type, new no_expr(curr_lineno()), body); :}
-*/
+     | LET OBJECTID:id COLON TYPEID:type ASSIGN expr:init IN expr:body
+         {: RESULT = new let(curr_lineno(), id, type, init, body); :}
+     | LET OBJECTID:id COLON TYPEID:type IN expr:body
+         {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), body); :}
      | CASE expr:e OF case_list:cases ESAC
           {: RESULT = new typcase(curr_lineno(), e, cases); :}
      | NEW TYPEID:name
