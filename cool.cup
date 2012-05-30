@@ -178,13 +178,14 @@ let_id_list ::= let_id
             ;
 */
 
-expr ::= OBJECTID ASSIGN expr
-     /* dispatch */
+expr ::= OBJECTID:name ASSIGN expr:e
+         {: RESULT = new assign(curr_lineno(), name, e); :}
      | expr:e DOT OBJECTID:name LPAREN expr_list:actual RPAREN
          {: RESULT = new dispatch(curr_lineno(), e, name, actual); :}
-     | expr AT TYPEID DOT OBJECTID LPAREN expr_list RPAREN
-     /* function call? */
-     | OBJECTID LPAREN expr_list RPAREN
+     | expr:e AT TYPEID:type DOT OBJECTID:name LPAREN expr_list:actual RPAREN
+         {: RESULT = new static_dispatch(curr_lineno(), e, type, name, actual); :}
+     | OBJECTID:name LPAREN expr_list:actual RPAREN
+         {: RESULT = new dispatch(curr_lineno(), new object(curr_lineno(), AbstractTable.idtable.addString("self")), name, actual); :}
      | IF expr THEN expr ELSE expr FI
      | WHILE expr LOOP expr POOL
      | LBRACE block_list:bl RBRACE
