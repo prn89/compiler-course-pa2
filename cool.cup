@@ -159,6 +159,8 @@ block_list ::= expr:e SEMI
                {: RESULT = (new Expressions(curr_lineno())).appendElement(e); :}
            | block_list:bl expr:e SEMI
                {: RESULT = bl.appendElement(e); :}
+           | error SEMI
+               {: RESULT = (new Expressions(curr_lineno())); :}
            ;
 
 case ::= OBJECTID:name COLON TYPEID:type DARROW expr:e SEMI
