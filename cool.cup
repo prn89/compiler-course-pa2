@@ -208,6 +208,11 @@ expr ::= OBJECTID:name ASSIGN expr:e
      | LET OBJECTID:id COLON TYPEID:type COMMA inner_lets:inner
          {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), inner); :}
 
+     | LET error COMMA OBJECTID:id COLON TYPEID:type ASSIGN expr:init COMMA inner_lets:inner
+         {: RESULT = new let(curr_lineno(), id, type, init, inner); :}
+     | LET error COMMA OBJECTID:id COLON TYPEID:type COMMA inner_lets:inner
+         {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), inner); :}
+
      | CASE expr:e OF case_list:cases ESAC
           {: RESULT = new typcase(curr_lineno(), e, cases); :}
      | NEW TYPEID:name
