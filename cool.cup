@@ -76,6 +76,7 @@ nonterminal Expressions block_list;
 nonterminal Formals formal_list;
 nonterminal Case case;
 nonterminal Cases case_list;
+nonterminal Expression inner_lets;
 
 
 /* Precedence declarations go here. */
@@ -169,15 +170,16 @@ case_list ::= case:c
             | case_list:cs case:c
               {: RESULT = cs.appendElement(c); :}
             ;
-/*
-let_id ::= ID COLON TYPE
-       | ID COLON  TYPE ASSIGN expr
-       ;
 
-let_id_list ::= let_id
-            | let_id COMMA let_id_list
-            ;
-*/
+inner_lets ::= OBJECTID:id COLON TYPEID:type ASSIGN expr:init IN expr:body
+               {: RESULT = new let(curr_lineno(), id, type, init, body); :}
+           | OBJECTID:id COLON TYPEID:type IN expr:body
+               {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), body); :}
+           | OBJECTID:id COLON TYPEID:type ASSIGN expr:init COMMA inner_lets:inner
+               {: RESULT = new let(curr_lineno(), id, type, init, inner); :}
+           | OBJECTID:id COLON TYPEID:type COMMA inner_lets:inner
+               {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), inner); :}
+           ;
 
 expr ::= OBJECTID:name ASSIGN expr:e
          {: RESULT = new assign(curr_lineno(), name, e); :}
@@ -193,11 +195,17 @@ expr ::= OBJECTID:name ASSIGN expr:e
          {: RESULT = new loop(curr_lineno(), pred, body); :}
      | LBRACE block_list:bl RBRACE
          {: RESULT = new block(curr_lineno(), bl); :}
-     /* complicated */
+
      | LET OBJECTID:id COLON TYPEID:type ASSIGN expr:init IN expr:body
          {: RESULT = new let(curr_lineno(), id, type, init, body); :}
      | LET OBJECTID:id COLON TYPEID:type IN expr:body
          {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), body); :}
+
+     | LET OBJECTID:id COLON TYPEID:type ASSIGN expr:init COMMA inner_lets:inner
+         {: RESULT = new let(curr_lineno(), id, type, init, inner); :}
+     | LET OBJECTID:id COLON TYPEID:type COMMA inner_lets:inner
+         {: RESULT = new let(curr_lineno(), id, type, new no_expr(curr_lineno()), inner); :}
+
      | CASE expr:e OF case_list:cases ESAC
           {: RESULT = new typcase(curr_lineno(), e, cases); :}
      | NEW TYPEID:name
