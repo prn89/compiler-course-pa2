@@ -123,6 +123,8 @@ dummy_feature_list
 	    {: RESULT = (new Features(curr_lineno())).appendElement(f); :}
         | dummy_feature_list:fl feature:f SEMI
 	    {: RESULT = fl.appendElement(f); :}
+        | error SEMI
+	    {: RESULT = new Features(curr_lineno()); :}
 	;
 
 feature ::= OBJECTID:name LPAREN formal_list:fl RPAREN COLON TYPEID:type LBRACE expr:e RBRACE
