@@ -187,7 +187,8 @@ expr ::= OBJECTID:name ASSIGN expr:e
      | OBJECTID:name LPAREN expr_list:actual RPAREN
          {: RESULT = new dispatch(curr_lineno(), new object(curr_lineno(), AbstractTable.idtable.addString("self")), name, actual); :}
      | IF expr THEN expr ELSE expr FI
-     | WHILE expr LOOP expr POOL
+     | WHILE expr:pred LOOP expr:body POOL
+         {: RESULT = new loop(curr_lineno(), pred, body); :}
      | LBRACE block_list:bl RBRACE
          {: RESULT = new block(curr_lineno(), bl); :}
      /* complicated */
